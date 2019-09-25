@@ -1,4 +1,4 @@
-'use strickt';
+'use strict';
 
  /*------
  | Why is eve in an IIFE?
@@ -9,10 +9,10 @@
  | Everything that is returned will be saved.
 */
 const eve = (()=> {
-  // Set for version controll in the future
+
   let eve = {
     __version: {
-      name: '0.0.1',
+      name: '0.0.2',
       code: '000',
     },
     __jsfiles: [],
@@ -45,8 +45,7 @@ const eve = (()=> {
   }
 
   const clear = {
-    Key (keyName, object = window)
-    {
+    Key (keyName, object = window) {
       try {
         delete object[keyName];
       } catch (err) {
@@ -54,22 +53,21 @@ const eve = (()=> {
       }
     },
 
-    Function (functionName, object)
-    {
+    Function (functionName, object) {
       if (typeof functionName === 'function')
-        this.Key(functionName, object);
+      this.Key(functionName, object);
     },
 
-    Object (objectName, object)
-    {
+    Object (objectName, object) {
       if (typeof objectName === 'object')
-        this.Key(objectName, object);
+      this.Key(objectName, object);
     },
 
-    Variable (variable, object) { this.Key(variable, object); },
+    Variable (variable, object) {
+      this.Key(variable, object);
+    },
 
-    Array (arrayName, object)
-    {
+    Array (arrayName, object) {
       if (typeof arrayName === 'object') {
         if (arrayName instanceof Array) {
           this.Key(arrayName, object);
@@ -133,7 +131,6 @@ const eve = (()=> {
         }
       }
 
-      // (type === 'jsonp' ? eve.fetch.JSONP(path, jsonpOptions, callback, errorCallback) : fetch(request))
       fetch(request)
         .then((res)=> {
           if (!res.ok) throw res;
@@ -164,7 +161,6 @@ const eve = (()=> {
       {
         divId,
         async = true,
-        mod = false,
       },
       callback,
       errorCallback,
@@ -198,14 +194,10 @@ const eve = (()=> {
 
         const element = create.HTMLElement('script');
         if (!element) throw 'element could not be created!' 
-        
-        // Set file type.
-        (!mod)
-          ? element.type = 'text/javascript'
-          : element.type = 'module'
 
         element.src = source;
         element.async = async;
+        element.type = 'application/javascript';
 
         function func ()
         {
@@ -276,7 +268,7 @@ const eve = (()=> {
         }
 
         if (isEVE) {
-          for(key in object) {
+          for(let key in object) {
             let keyAproved = AproveKey(key);
 
             if (keyAproved) {
@@ -340,8 +332,8 @@ const eve = (()=> {
 
   const create = {
     HTMLElement (element) { return document.createElement(element); },
-
-    Request (parameters, argumentCount) {
+    Request (parameters, argumentCount)
+    {
       let callback;
       let errorCallback;
       if (
@@ -439,7 +431,6 @@ const eve = (()=> {
     return false;
   }
 
-  // 
   eve = { 
     ...eve,
     AproveKey: AproveKey,
